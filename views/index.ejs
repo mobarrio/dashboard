@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= title %></title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-switch.min.css" rel="stylesheet">
+<link href="css/bootstrap-table.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+<link href="css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">
+					<span><%= title %></span>
+					<div style="font-size: 10px;color: #333;margin-top: 0px;padding: 0;line-height: 10px;">
+					 <span style="color: #000;">CPUs: </span>		<span style="color: rgb(95, 100, 104);" id="ncpus"></span>
+					 <span style="color: #000;">- CPU: </span>		<span style="color: rgb(95, 100, 104);" id="cpuusage"></span>
+					 <span style="color: #000;">- MEM: </span>		<span style="color: rgb(95, 100, 104);" id="memusage"></span>
+					 <span style="color: #000;">- SWAP: </span>		<span style="color: rgb(95, 100, 104);" id="swapusage"></span>
+					 <span style="color: #000;">- IO Wait: </span>	<span style="color: rgb(95, 100, 104);" id="iowait"></span>
+					</div>
+				</a>
+			</div>
+							
+		</div><!-- /.container-fluid -->
+	</nav>
+		
+	<div class="col-sm-9 col-sm-offset-1 col-lg-10 col-lg-offset-1 main">			
+		<div class="row" style="margin-bottom: 2rem;">
+			<div class="col-lg-12 text-center">
+				<h1 id="hostname">Servername</h1>
+				<h4 id="release">-</h4>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-xs-12 col-md-6 col-lg-3">
+				<div class="panel panel-widget ">
+					<div class="row no-padding">
+						<h4 class="load-average-status">Load Average</h4>
+						<div class="col-sm-4 col-lg-4 widget-left">
+							<div class="text-muted">1m</div>
+							<div class="large" id="load1m"></div>
+						</div>					
+						<div class="col-sm-4 col-lg-4 widget-left">
+							<div class="text-muted">5m</div>
+							<div class="large" id="load5m"></div>
+						</div>					
+						<div class="col-sm-4 col-lg-4 widget-left">
+							<div class="text-muted">15m</div>
+							<div class="large" id="load15m"></div>
+						</div>					
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6 col-lg-6">
+				<div class="panel panel-widget ">
+					<div class="row no-padding">
+						<h4 class="tasks-status">Tasks</h4>
+						<div class="col-sm-2 col-lg-2 col-sm-offset-1 col-lg-offset-1 widget-left">
+							<div class="text-muted">Total</div>
+							<div class="large" id="task_total"></div>
+						</div>					
+						<div class="col-sm-2 col-lg-2 widget-left">
+							<div class="text-muted">Running</div>
+							<div class="large" id="task_running"></div>
+						</div>					
+						<div class="col-sm-2 col-lg-2 widget-left">
+							<div class="text-muted">Sleeping</div>
+							<div class="large" id="task_sleeping"></div>
+						</div>					
+						<div class="col-sm-2 col-lg-2 widget-left">
+							<div class="text-muted">Stopped</div>
+							<div class="large" id="task_stopped"></div>
+						</div>					
+						<div class="col-sm-2 col-lg-2 widget-left">
+							<div class="text-muted">Zombie</div>
+							<div class="large" id="task_zombie"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-md-offset-3 col-md-6 col-lg-offset-0 col-lg-3">
+				<div class="panel panel-widget ">
+					<div class="row no-padding">
+						<h4 class="cpu-status">CPU</h4>
+						<div class="col-sm-4 col-lg-4 widget-left">
+							<div class="text-muted">User</div>
+							<div class="large" id="cpu_usr"></div>
+						</div>					
+						<div class="col-sm-4 col-lg-4 widget-left">
+							<div class="text-muted">System</div>
+							<div class="large" id="cpu_sys"></div>
+						</div>					
+						<div class="col-sm-4 col-lg-4 widget-left">
+							<div class="text-muted">Idle</div>
+							<div class="large" id="cpu_idl"></div>
+						</div>					
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-xs-12 col-md-6 col-lg-6">
+				<div class="panel panel-widget ">
+					<div class="row no-padding">
+						<h4 class="ram-status" title="sync && echo 3 > /proc/sys/vm/drop_caches">RAM</h4>
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Total</div>
+							<div class="large" id="ram_total"></div>
+						</div>					
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Free</div>
+							<div class="large" id="ram_free"></div>
+						</div>					
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Used</div>
+							<div class="large" id="ram_used"></div>
+						</div>
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Buffer/Cache</div>
+							<div class="large" id="ram_buff_cache"></div>
+						</div>					
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-md-6 col-lg-6">
+				<div class="panel panel-widget ">
+					<div class="row no-padding">
+						<h4 class="swap-status" title="swapoff -a && swapon -a">SWAP</h4>
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Total</div>
+							<div class="large" id="swap_total"></div>
+						</div>					
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Free</div>
+							<div class="large" id="swap_free"></div>
+						</div>					
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Used</div>
+							<div class="large" id="swap_used"></div>
+						</div>
+						<div class="col-sm-3 col-lg-3 widget-left">
+							<div class="text-muted">Available</div>
+							<div class="large" id="swap_avail"></div>
+						</div>					
+					</div>
+				</div>
+			</div>
+
+		</div><!--/.row-->
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">Process - Top 10</div>
+					<div class="panel-body panel-body-process" style="display: none;">
+						<table id="procesos" data-toggle="table">
+						    <thead>
+						    <tr>
+						        <th data-field="pid" data-align="right" >PID</th>
+						        <th data-field="user" >USER</th>
+						        <th data-field="pr" >PR</th>
+						        <th data-field="ni" >NI</th>
+						        <th data-field="virt" >VIRT</th>
+						        <th data-field="res" >RES</th>
+						        <th data-field="shr" >SHR</th>
+						        <th data-field="s" >S</th>
+						        <th data-field="cpu" >%CPU</th>
+						        <th data-field="mem" >%MEM</th>
+						        <th data-field="time" >TIME+</th>
+						        <th data-field="command" >COMMAND</th>
+						    </tr>
+						    </thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->	
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">IOStats - 
+						<input type="checkbox" name="iostat-checkbox" checked>
+					</div>
+					<div class="panel-body panel-body-iostat" style="display: none;">
+						<table id="iostat" data-toggle="table">
+						    <thead>
+						    <tr>
+						        <th data-field="device" data-align="right" >Device</th>
+						        <th data-field="rrqms" >rrqm/s</th>
+						        <th data-field="wrqms" >wrqm/s</th>
+						        <th data-field="rs" >r/s</th>
+						        <th data-field="ws" >w/s</th>
+						        <th data-field="rkbs" >rkB/s</th>
+						        <th data-field="wkbs" >wkB/s</th>
+						        <th data-field="avgrqsz" >avgrq-sz</th>
+						        <th data-field="avgqusz" >avgqu-sz</th>
+						        <th data-field="await" >await</th>
+						        <th data-field="r_await" >r_await</th>
+						        <th data-field="w_await" >w_await</th>
+						        <th data-field="svctm" >svctm</th>
+						        <th data-field="util" >%util</th>
+						    </tr>
+						    </thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->	
+
+
+	</div>	<!--/.main-->
+
+    <script src="js/jquery-1.12.0.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-switch.min.js"></script>
+	<script src="js/bootstrap-table.min.js"></script>
+	<script src="js/bootstrap-table-es-SP.min.js"></script>
+	<script src="js/lumino.glyphs.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+	$(function() {
+		Dashboard.init({interval:5, iostat:1});
+		Dashboard.SetInterval(1);
+		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true);
+		$('input[name="iostat-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+  			if(state === false)	{ Dashboard.StopIOstat();  }
+  			else 				{ Dashboard.StartIOstat(); }
+		});
+	});
+	</script>	
+</body>
+
+</html>
+

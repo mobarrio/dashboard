@@ -1,0 +1,61 @@
+	@media (max-width: 1160px) {
+		body { font-size: 12px; }
+		h1 { font-size: 30px; }
+		h4, .h4 { font-size: 16px; }
+		.large { font-size: 1.25em; }
+	}
+	.widget-left {
+    height: 44px;
+    padding-top: 0px;		
+    text-align: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+	}
+	.large {font-size: 1.3em;}
+	.easypiechart {
+	    position: relative;
+	    text-align: center;
+	    width: 120px;
+	    height: 140px;
+	    margin: 0px auto 0px auto;
+	}
+	.navbar-inverse {
+	    background-color:  rgb(255, 255, 255);
+	    border-color: rgb(0, 144, 255);
+	}
+	.navbar-header .navbar-brand span {
+	    color: rgb(0, 144, 255);
+	}
+	.navbar-header .navbar-brand {
+	    color: #fff;
+	    font-size: 16px;
+	    text-transform: uppercase;
+	    font-weight: 700;
+	    letter-spacing: 1px;
+	}
+	h4 {
+		margin: 0px auto 0px auto;
+	    text-align: center;
+	    height: 20px;
+	}
+	.bootstrap-table .table { font-size: 12px !important; }
+	.panel { margin-bottom: 5px;}
+	.status-ok      { background-color: #91FF3E; color: #5F6468; }
+	.status-alert   { background-color: #FF473E; color: #FFFFFF; }
+	.status-warning { background-color: #FCFF3E; color: #5F6468; }
+	.bootstrap-switch .bootstrap-switch-handle-on,
+	.bootstrap-switch .bootstrap-switch-handle-off,
+	.bootstrap-switch .bootstrap-switch-label {
+	  -webkit-box-sizing: border-box;
+	  -moz-box-sizing: border-box;
+	  box-sizing: border-box;
+	  cursor: pointer;
+	  display: inline-block !important;
+	  height: 100%;
+	  padding: 0px 12px;
+	  font-size: 12px;
+	  line-height: 28px;
+	}	
+	.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
+	    background: #D2C9CB;
+	}

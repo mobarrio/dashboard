@@ -66,11 +66,11 @@ var Dashboard = (function() {
 		$("#memusage").html(((1-(msg.data.ram.free/msg.data.ram.total))*100).toFixed(2) + "%");
 		$("#swapusage").html(((1-(msg.data.swap.free/msg.data.swap.total))*100).toFixed(2) + "%");
 
-		// Hight load average
+		// High load average
 		if((msg.data.loadavg.avg1 >= ncpus) || (msg.data.loadavg.avg5 >= ncpus) || (msg.data.loadavg.avg15 >= ncpus)){
 			if(!not_lvg){
 				$(".load-average-status").removeClass("status-warning").removeClass("status-ok").addClass("status-alert");
-				n = new Notification( "Hight Load Average", { body: "Attention: Hight Load Averace on "+msg.hostname, icon : "/images/alert.jpg" });
+				n = new Notification( "High Load Average", { body: "Attention: High Load Averace on "+msg.hostname, icon : "/images/alert.jpg" });
 				setTimeout(function() { n.close(); }, 10000);
 				not_lvg=1;
 			}
@@ -94,11 +94,11 @@ var Dashboard = (function() {
 			not_zmb = 0;
 		}
 
-		// Hight cpu usage
+		// High cpu usage
 		if(msg.data.cpu.idle.toFixed(2) <= 5){
 			if(!not_cpu){
 				$(".cpu-status").removeClass("status-warning").removeClass("status-ok").addClass("status-alert");
-				n = new Notification( "Hight CPU Usage", { body: "Attention: Hight CPU Usage on "+msg.hostname, icon : "/images/alert.jpg" });
+				n = new Notification( "High CPU Usage", { body: "Attention: High CPU Usage on "+msg.hostname, icon : "/images/alert.jpg" });
 				setTimeout(function() { n.close(); }, 10000);
 				not_cpu = 1;
 			}
@@ -109,11 +109,11 @@ var Dashboard = (function() {
 			not_cpu = 0;
 		}
 
-		// Hight ram usage
+		// High ram usage
 		if((msg.data.ram.free/msg.data.ram.total).toFixed(2) <= .10 ){ // 10%
 			if(!not_ram){
 				$(".ram-status").removeClass("status-warning").removeClass("status-ok").addClass("status-alert");
-				n = new Notification( "Hight Memory Usage", { body: "Attention: Hight Memory Usage on "+msg.hostname+" try: sync && echo 3 > /proc/sys/vm/drop_caches", icon : "/images/alert.jpg" });
+				n = new Notification( "High Memory Usage", { body: "Attention: High Memory Usage on "+msg.hostname+" try: sync && echo 3 > /proc/sys/vm/drop_caches", icon : "/images/alert.jpg" });
 				setTimeout(function() { n.close(); }, 10000);
 				not_ram = 1;
 			}
@@ -124,11 +124,11 @@ var Dashboard = (function() {
 			not_ram = 0;
 		}
 
-		// Hight swap usage
+		// High swap usage
 		if((msg.data.swap.free/msg.data.swap.total).toFixed(2) <= .35 ){ // 34%
 			if(!not_swp){
 				$(".swap-status").removeClass("status-warning").removeClass("status-ok").addClass("status-alert");
-				n = new Notification( "Hight SWAP Usage", { body: "Attention: Hight SWAP Usage on "+msg.hostname+" try : swapoff -a && swapon -a", icon : "/images/alert.jpg" });
+				n = new Notification( "High SWAP Usage", { body: "Attention: High SWAP Usage on "+msg.hostname+" try : swapoff -a && swapon -a", icon : "/images/alert.jpg" });
 				setTimeout(function() { n.close(); }, 10000);
 				not_swp = 1;
 			}

@@ -59,7 +59,8 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
    
 
 ### Demo
-<img src="https://raw.githubusercontent.com/mobarrio/Dashboard/master/public/images/Dashboard.png" />
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard.png" />
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-iostat.png" />
    
 ### Credits
 **

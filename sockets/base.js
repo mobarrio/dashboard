@@ -12,10 +12,11 @@ module.exports = function (io) {
   var iostat_data  = "";
   var proc         = null;
   var iostat       = null;
+  var process      = {"status":{"top":{"enabled":null},"iostat":{"enabled":null}}};
 
-  io.on('connection', function (socket) {
+ // io.sockets.on('connection', function(socket) {
+ io.on('connection', function (socket) {
       debug("Nueva conexion entrante.");
-
       socket.emit('connected', { message: 'Conexion con el server establecida.' });
 
       // Change interval of Top and IOSTAT
@@ -28,7 +29,9 @@ module.exports = function (io) {
       socket.on('start_iostat', function (data) {
         if(iostat && iostat.pid){
           debug("Streaming IOSTAT actuamente activo PID: "+iostat.pid);
-          socket.emit('status', "Streaming IOSTAT actuamente activo PID: "+iostat.pid);
+          io.sockets.emit('status', { message: "Streaming IOSTAT actuamente activo PID: "+iostat.pid} );
+          debug("START IOSTAT: Emite en broadcast un Refr esh IOSTAT: true.");
+          io.sockets.emit('refresh', process.status );
           return;
         }
 
@@ -36,13 +39,22 @@ module.exports = function (io) {
         iostat    = spawn('iostat', ['-x', interval_ios]);
         debug("Cliente sincronizado, arrancando Streaming de IOSTAT PID: "+iostat.pid);
         socket.emit('status', { message: "Arrancando Streaming IOSTAT PID: "+iostat.pid});
+        debug("START IOSTAT: Emite en broadcast un Refresh IOSTAT: true.");
+        process.status.iostat.enabled = true;
+        io.sockets.emit('refresh', process.status );
 
         iostat.stdout.on('data', function (data) {
           iostat_data+=data.toString();
           processDataIOStat(iostat_data);
         });
 
-        iostat.on('close', function (code) { iostat = null; debug('Deteniendo el streaming de IOSTAT. Codigo de salida: ' + code); });
+        iostat.on('close', function (code) { 
+          iostat = null; 
+          debug('Deteniendo el streaming de IOSTAT. Codigo de salida: ' + code); 
+          debug("STOP IOSTAT: Emite en broadcast un Refresh IOSTAT: false");
+          process.status.iostat.enabled = false;
+          io.sockets.emit('refresh', process.status );
+        });
 
         var processDataIOStat = function (_data){
           debug("Procesando datos de IOSTAT PID: "+iostat.pid);
@@ -52,15 +64,16 @@ module.exports = function (io) {
           io.sockets.emit('msgiostat', result);
           iostat_data="";
         }
-
         socket.emit('status', { message: "Streaming IOSTAT activado PID: "+iostat.pid});
-      });
+      });  // End Start IOSTAT
 
       // Start TOP
       socket.on('start_top', function (data) {
         if(proc && proc.pid){
           debug("Streaming TOP actuamente activo PID: "+proc.pid);
-          socket.emit('status', "Streaming TOP actuamente activo PID: "+proc.pid);
+          socket.emit('status', { message: "Streaming TOP actuamente activo PID: "+proc.pid });
+          debug("START TOP: Emite en broadcast un Refresh TOP: true.");
+          io.sockets.emit('refresh', process.status );
           return;
         }
 
@@ -68,13 +81,22 @@ module.exports = function (io) {
         proc      = spawn('top', ['-b',"-d", interval_top]);
         debug("Cliente sincronizado, arrancando Streaming de TOP PID: "+proc.pid);
         socket.emit('status', { message: "Arrancando Streaming de TOP PID: "+proc.pid});
+        debug("START TOP: Emite en broadcast un Refresh TOP: true.");
+        process.status.top.enabled = true;
+        io.sockets.emit('refresh', process.status );
 
         proc.stdout.on('data', function (data) {
           top_data+=data.toString();
           processData(top_data);
         });
 
-        proc.on('close', function (code)   { proc = null; debug('Deteniendo el streaming de TOP. Codigo de salida: ' + code); });
+        proc.on('close', function (code)   { 
+          proc = null; 
+          debug('Deteniendo el streaming de TOP. Codigo de salida: ' + code); 
+          debug("STOP TOP: Emite en broadcast un Refresh TOP: false");
+          process.status.top.enabled = false;
+          io.sockets.emit('refresh', process.status );
+        });
 
         var processData = function (_data){
           var start=_data.indexOf("top - ");
@@ -88,32 +110,31 @@ module.exports = function (io) {
           top_data="";
         }
         socket.emit('status', { message: "Streaming TOP activado PID: "+proc.pid});
-      });
+      }); // End Start TOP
 
+       // Stop TOP
       socket.on('stop_top', function (data) {
         if(!proc || !proc.pid)
           return socket.emit('status', { message: "Streaming TOP detenido."});
 
-        if(proc && proc.pid) proc.kill('SIGTERM')
+        if(proc && proc.pid){ proc.kill('SIGTERM'); } 
         proc = null; 
         socket.emit('status', { message: "Deteniendo el streaming de TOP." });
         return;
-      });
+      }); // End Stop TOP
 
+      // Start IOSTAT
       socket.on('stop_iostat', function (data) {
         if(!iostat || !iostat.pid)
           return socket.emit('status', { message: "Streaming IOSTAT detenido."});
 
-        if(iostat && iostat.pid) iostat.kill('SIGTERM')
+        if(iostat && iostat.pid){ iostat.kill('SIGTERM'); }
         iostat = null; 
         socket.emit('status', { message: "Deteniendo el streaming de IOSTAT ." });
         return;
-      });
+      }); // End Stop IOSTAT
 
-
-      socket.on('status', function (data) {
-        socket.emit('status', { message: "EHLO OK Connected" });
-      });
+      socket.on('status', function (data) { socket.emit('status', { message: "EHLO OK Connected" }); });
 
       socket.on('disconnect', function () {
         socket.emit('disconnected');
@@ -129,7 +150,6 @@ module.exports = function (io) {
             debug("Proceso IOSTAT finalizado.");
           iostat = null; 
           socket.emit('status', { message: "Deteniendo el streaming de IOSTAT" });
-
           return;
         }
       });

@@ -17,20 +17,47 @@ var Dashboard = (function() {
         done: function() {}
     };
 
-	SocketStatus = function (data) { if (debug) console.log("SRV: ",data.message); };
+	SocketStatus = function (data) { if (debug) console.log("SocketStatus - ", data.message); };
 
     SocketConnected = function (data) {
-        if (debug) console.log("SRV: ",data.message);
-        if (debug) console.log("CLI: Iniciando TOP streaming.");
+        if (debug) console.log("SocketConnected - ",data.message);
         socket.emit('start_top', { message: 'Iniciar Streaming TOP.' });
     };
 
 	SocketMsgIOstat = function(msg){
-		if(!msg) return;
-		if (debug) console.log(JSON.stringify(msg));
+		if(!msg || !msg.data || !msg.data.avgcpu) return;
+		if (debug) console.log("SocketMsgIOstat - ", JSON.stringify(msg.data.avgcpu.iowait));
+		// $("input[name='iostat-checkbox']").bootstrapSwitch('state', true, true);
+		// $(".panel-body-iostat").css("display","");
 		$("#iostat").bootstrapTable('removeAll').bootstrapTable('append', msg.data.process);
 		if(msg.data.avgcpu.iowait) $("#iowait").html(msg.data.avgcpu.iowait + "%");		
-	}
+	};
+
+	SocketRefresh = function(msg){
+		if(!msg) return;
+		if (debug) console.log("SocketRefresh - msg.iostat: [", JSON.stringify(msg),"]");
+
+		if(msg.iostat && msg.iostat.enabled !== null && msg.iostat.enabled !== undefined){
+			if(msg.iostat.enabled === false){
+				$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true);
+				$(".panel-body-iostat").css("display","none");
+				$("#iostat").bootstrapTable('removeAll');
+			}else{
+				$("input[name='iostat-checkbox']").bootstrapSwitch('state', true, true);
+				$(".panel-body-iostat").css("display","");
+			}
+		}
+		if(msg.top && msg.top.enabled !== null && msg.top.enabled !== undefined){
+			if(msg.top.enabled === false){
+				$("input[name='top-checkbox']").bootstrapSwitch('state', false, true);
+				$(".panel-body-process").css("display","none");
+				$("#top").bootstrapTable('removeAll');
+			}else{
+				$("input[name='top-checkbox']").bootstrapSwitch('state', true, true);
+				$(".panel-body-process").css("display","");
+			}
+		}
+	};
 
 	SocketMsgTop = function (msg) { 
 		if(!msg) return;
@@ -70,7 +97,7 @@ var Dashboard = (function() {
 		if((msg.data.loadavg.avg1 >= ncpus) || (msg.data.loadavg.avg5 >= ncpus) || (msg.data.loadavg.avg15 >= ncpus)){
 			if(!not_lvg){
 				$(".load-average-status").removeClass("status-warning").removeClass("status-ok").addClass("status-alert");
-				n = new Notification( "High Load Average", { body: "Attention: High Load Averace on "+msg.hostname, icon : "/images/alert.jpg" });
+				n = new Notification( "High Load Average", { body: "Attention: High Load Average on "+msg.hostname, icon : "/images/alert.jpg" });
 				setTimeout(function() { n.close(); }, 10000);
 				not_lvg=1;
 			}
@@ -142,16 +169,16 @@ var Dashboard = (function() {
 
 	SocketInit = function(config) {
 		socket = io.connect();
-		socket.removeAllListeners();
-
+		//socket.removeAllListeners();
 		socket.on("msgiostat",	SocketMsgIOstat);
 		socket.on("msgtop",		SocketMsgTop);
 		socket.on("connected",	SocketConnected);
 		socket.on("status",		SocketStatus);
+		socket.on("refresh",	SocketRefresh);
     };  
 
     SocketpreInit = function(callback) {
-        if (debug) console.log("Iniciando conexion.");              
+        if (debug) console.log("SocketpreInit - Iniciando conexion.");              
         typeof callback === 'function' && callback();
     };
 
@@ -163,14 +190,20 @@ var Dashboard = (function() {
             });
         },
         StopIOstat: function() {
-			if (debug) console.log("CLI: Deteniendo IOSTAT streaming.");
 			socket.emit('stop_iostat', { message: 'Detener Streaming IOSTAT.' });
 			$(".panel-body-iostat").css("display","none");
         },
         StartIOstat: function() {
-			if (debug) console.log("CLI: Iniciando IOSTAT streaming.");
 			socket.emit('start_iostat', { message: 'Iniciar Streaming IOSTAT.' });
 			$(".panel-body-iostat").css("display","");
+        },
+        StopTop: function() {
+			socket.emit('stop_top', { message: 'Detener Streaming TOP.' });
+			$(".panel-body-process").css("display","none");
+        },
+        StartTop: function() {
+			socket.emit('start_top', { message: 'Iniciar Streaming TOP.' });
+			$(".panel-body-process").css("display","");
         },
         SetInterval: function(interval){
         	settings.interval = interval;

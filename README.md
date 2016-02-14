@@ -59,12 +59,26 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
    
 
 ### Demo
+**TOP Output**
 <img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard.png" />
+
+**IOSTAT Output**
 <img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-iostat.png" />
-   
+
+**Alerts**
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard02.png" />
+<div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-info.png" />
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-alert.png" />
+</div>
+
+**Resumen**
+<div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-header.png" />
+</div>
+
 ### Credits
-**
-Esta aplicación utiliza las siguientes librerías:**
+**Esta aplicación utiliza las siguientes librerías:**
 
 ```
 - Socke.IO - by http://socket.io

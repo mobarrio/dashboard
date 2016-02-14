@@ -165,7 +165,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
-					<div class="panel-heading">Process - Top 10</div>
+					<div class="panel-heading">Top - <input type="checkbox" name="top-checkbox" checked></div>
 					<div class="panel-body panel-body-process" style="display: none;">
 						<table id="procesos" data-toggle="table">
 						    <thead>
@@ -193,9 +193,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
-					<div class="panel-heading">IOStats - 
-						<input type="checkbox" name="iostat-checkbox" checked>
-					</div>
+					<div class="panel-heading">IOStats - <input type="checkbox" name="iostat-checkbox" checked></div>
 					<div class="panel-body panel-body-iostat" style="display: none;">
 						<table id="iostat" data-toggle="table">
 						    <thead>
@@ -237,12 +235,18 @@
     <script>
 	$(function() {
 		Dashboard.init({interval:5, iostat:1});
-		Dashboard.SetInterval(1);
-		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true);
-		$('input[name="iostat-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+		Dashboard.SetInterval(5);
+		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true).on('switchChange', function(event, state) {
   			if(state === false)	{ Dashboard.StopIOstat();  }
   			else 				{ Dashboard.StartIOstat(); }
 		});
+
+		$("input[name='top-checkbox']").bootstrapSwitch('state', false, true).on('switchChange', function(event, state) {
+  			if(state === false)	{ Dashboard.StopTop();  }
+  			else 				{ Dashboard.StartTop(); }
+		});
+
+
 	});
 	</script>	
 </body>

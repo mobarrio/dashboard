@@ -65,7 +65,7 @@ var Dashboard = (function() {
 		ncpus = msg.data.cpus.length;
 		$("#ncpus").html(ncpus);
 		$("#hostname").html(msg.hostname); 
-		$("#ostype").html(msg.data.os.type); 
+		//$("#ostype").html(msg.data.os.type); 
 		$("#load1m").html(msg.data.loadavg.avg1);
 		$("#load5m").html(msg.data.loadavg.avg5); 
 		$("#load15m").html(msg.data.loadavg.avg15); 
@@ -167,11 +167,17 @@ var Dashboard = (function() {
 		}
 	};
 
+	SocketMsgOSType = function(msg){
+		if(!msg) return;
+		$("#ostype").html(msg.os); 
+	};
+
 	SocketInit = function(config) {
 		socket = io.connect();
 		//socket.removeAllListeners();
 		socket.on("msgiostat",	SocketMsgIOstat);
 		socket.on("msgtop",		SocketMsgTop);
+		socket.on("msgostype",	SocketMsgOSType);
 		socket.on("connected",	SocketConnected);
 		socket.on("status",		SocketStatus);
 		socket.on("refresh",	SocketRefresh);

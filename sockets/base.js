@@ -64,6 +64,7 @@ module.exports = function (io) {
           io.sockets.emit('msgiostat', result);
           iostat_data="";
         }
+
         socket.emit('status', { message: "Streaming IOSTAT activado PID: "+iostat.pid});
       });  // End Start IOSTAT
 
@@ -109,6 +110,12 @@ module.exports = function (io) {
           io.sockets.emit('msgtop', result);
           top_data="";
         }
+
+        var exec = require('child_process').exec;
+        var child = exec('lsb_release -a|grep -i Description|cut -f2');
+        child.stdout.on('data', function(data) { io.sockets.emit('msgostype', { os: data.toString() }); });
+        child.stderr.on('data', function(data) { io.sockets.emit('msgostype', { os: data.toString() }); });
+
         socket.emit('status', { message: "Streaming TOP activado PID: "+proc.pid});
       }); // End Start TOP
 

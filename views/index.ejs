@@ -235,13 +235,15 @@
     <script>
 	$(function() {
 		Dashboard.init({interval:5, iostat:1});
-		Dashboard.SetInterval(5);
-		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true).on('switchChange', function(event, state) {
+		Dashboard.SetInterval(1);
+		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true);
+		$('input[name="iostat-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
   			if(state === false)	{ Dashboard.StopIOstat();  }
   			else 				{ Dashboard.StartIOstat(); }
 		});
 
-		$("input[name='top-checkbox']").bootstrapSwitch('state', false, true).on('switchChange', function(event, state) {
+		$("input[name='top-checkbox']").bootstrapSwitch('state', false, true);
+		$('input[name="top-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
   			if(state === false)	{ Dashboard.StopTop();  }
   			else 				{ Dashboard.StartTop(); }
 		});

@@ -65,7 +65,7 @@ var Dashboard = (function() {
 		ncpus = msg.data.cpus.length;
 		$("#ncpus").html(ncpus);
 		$("#hostname").html(msg.hostname); 
-		//$("#ostype").html(msg.data.os.type); 
+		$("#ostype").html(msg.data.os.type); 
 		$("#load1m").html(msg.data.loadavg.avg1);
 		$("#load5m").html(msg.data.loadavg.avg5); 
 		$("#load15m").html(msg.data.loadavg.avg15); 
@@ -77,7 +77,7 @@ var Dashboard = (function() {
 		$("#cpu_usr").html(msg.data.cpu.user.toFixed(2));
 		$("#cpu_sys").html(msg.data.cpu.system.toFixed(2));
 		$("#cpu_idl").html(msg.data.cpu.idle.toFixed(2));
-		$("#release").html(msg.data.os.type + " " + msg.data.os.release);
+		// $("#release").html(msg.data.os.type + " " + msg.data.os.release);
 		$("#ram_total").html(msg.data.ram.total);
 		$("#ram_free").html(msg.data.ram.free);
 		$("#ram_used").html(msg.data.ram.used);
@@ -169,7 +169,7 @@ var Dashboard = (function() {
 
 	SocketMsgOSType = function(msg){
 		if(!msg) return;
-		$("#ostype").html(msg.os); 
+		$("#release").html(msg.os);
 	};
 
 	SocketInit = function(config) {

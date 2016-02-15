@@ -19,6 +19,11 @@ module.exports = function (io) {
       debug("Nueva conexion entrante.");
       socket.emit('connected', { message: 'Conexion con el server establecida.' });
 
+      var exec = require('child_process').exec;
+      var child = exec('lsb_release -a|grep -i Description|cut -f2');
+      child.stdout.on('data', function(data) { io.sockets.emit('msgostype', { os: data.toString() }); });
+      child.stderr.on('data', function(data) { io.sockets.emit('msgostype', { os: data.toString() }); });
+
       // Change interval of Top and IOSTAT
       socket.on('changeInterval', function (data) {
         interval_top = data.interval_top;
@@ -110,11 +115,6 @@ module.exports = function (io) {
           io.sockets.emit('msgtop', result);
           top_data="";
         }
-
-        var exec = require('child_process').exec;
-        var child = exec('lsb_release -a|grep -i Description|cut -f2');
-        child.stdout.on('data', function(data) { io.sockets.emit('msgostype', { os: data.toString() }); });
-        child.stderr.on('data', function(data) { io.sockets.emit('msgostype', { os: data.toString() }); });
 
         socket.emit('status', { message: "Streaming TOP activado PID: "+proc.pid});
       }); // End Start TOP

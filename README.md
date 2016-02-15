@@ -5,9 +5,25 @@ Dashboard minimalista y no intrusiva para servers linux. Monitoriza en tiempo re
 
 Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-time Proccess, CPU, memory and Swap with NodeJS and Socke.IO
 
+### Pre-Instalacion:
+
+**Linux:**
+
+```
+ Install: 
+ 	CentOS, Redhat, Fedora: lsb_release
+ 	Ubuntu, Debian: lsb-release
+ 
+ eg: CentOS 
+          # yum -y install redhat-lsb-core*
+     Debian 
+          # apt-get install lsb-release
+```
+
+
 ### Instalacion:
 
-**En Linux/Solaris:**
+**Linux:**
 
 ```
  $ mkdir -p /var/adm/ssoo
@@ -54,7 +70,7 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
    
 **Después ejecutamos en un navegador:**
 ```
-   http://server:3000/
+   http://server:3030/
 ```
    
 

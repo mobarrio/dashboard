@@ -70,7 +70,7 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
    
 **Después ejecutamos en un navegador:**
 ```
-   http://server:3030/
+   http://server:666/
 ```
    
 

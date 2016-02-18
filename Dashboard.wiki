@@ -6,7 +6,7 @@
 ```
  $ mkdir -p /var/adm/ssoo
  $ cd /var/adm/ssoo
- $ git clone https://mobarrio@bitbucket.org/mobarrio/dashboard.git
+ $ git clone https://github.com/mobarrio/dashboard.git
  $ cd dashboard && npm install
 ```
 
@@ -38,15 +38,31 @@
 
 ### **Después ejecutamos en un navegador:**
 ```
- http://serverip:3000/
+ http://serverip:666/
 ```
 
+### Demo
+**TOP Output**
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard.png" />
 
-# Demo ( http://centos72testgsis:3000 )
-![Dashboard 1.0](https://raw.githubusercontent.com/mobarrio/Dashboard/master/public/images/Dashboard.png)
+**IOSTAT Output**
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-iostat.png" />
 
+**Alerts**
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard02.png" />
+<div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-info.png" />
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-alert.png" />
+</div>
 
-# Credits
+**Resumen**
+<div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-header.png" />
+</div>
+
+### Credits
+**Esta aplicación utiliza las siguientes librerías:**
+
 ```
 - Socke.IO - by http://socket.io
 - TopParser - by https://github.com/devalexqt/topparser

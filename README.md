@@ -58,7 +58,7 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
 
 **Ejecutar la app STANDALONE:**
 ```
-     $ node bin/www
+     $ node bin/server.js
 ```
 
 

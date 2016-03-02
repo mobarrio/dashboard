@@ -49,11 +49,26 @@ function parse(data,pid_limit){
 		avg15:os.loadavg()[2].toFixed(4)
 	};
 	var data_line=data.split("\n");
+	/*
+	-- Top EL6.7
+	top - 18:37:58 up  1:40,  7 users,  load average: 0.63, 0.76, 0.87
+	Tasks: 172 total,   1 running, 171 sleeping,   0 stopped,   0 zombie
+	Cpu(s):  1.3%us,  0.3%sy,  0.0%ni, 98.2%id,  0.2%wa,  0.0%hi,  0.0%si,  0.0%st
+	Mem:   8193704k total,  5033148k used,  3160556k free,    91056k buffers
+	Swap:  4128764k total,        0k used,  4128764k free,  2779588k cached
+
+	-- Top CentOS
+	top - 18:51:40 up 5 days,  9:19,  2 users,  load average: 0.00, 0.01, 0.05
+	Tasks: 120 total,   1 running, 119 sleeping,   0 stopped,   0 zombie
+	%Cpu(s):  0.2 us,  0.0 sy,  0.0 ni, 99.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+	KiB Mem :  3882108 total,  3015352 free,   183828 used,   682928 buff/cache
+	KiB Swap:  4190204 total,  4190204 free,        0 used.  3423452 avail Mem 
+	*/
 	parseLine(result.data,"task",data_line[1]);
-	parseLine(result.data,"cpu",data_line[2].replace(" us,","user,").replace(" sy,"," system,").replace(" id,"," idle,"));
+	parseLine(result.data,"cpu",data_line[2].replace("us,","user,").replace("sy,","system,").replace("id,"," idle,"));
 	result.data.cpus     = os.cpus();
-	parseLine(result.data,"ram",data_line[3].replace(RegExp("k ","g")," ").replace("buff/cache","buff_cache") );
-	parseLine(result.data,"swap",data_line[4].replace("avail Mem","avail").replace("used.","used,"));
+	parseLine(result.data,"ram",data_line[3].replace(RegExp("k ","g")," ").replace("buff/cache","buff_cache").replace("buffers","buff_cache") );
+	parseLine(result.data,"swap",data_line[4].replace(RegExp("k ","g")," ").replace("avail Mem","avail").replace("cached","avail").replace("used.","used,") );
 
 	// Transformamos la RAM a MB
 	result.data.ram.total      = Math.round(result.data.ram.total/1024).toFixed(2);

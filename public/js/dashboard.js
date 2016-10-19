@@ -24,6 +24,12 @@ var Dashboard = (function() {
         socket.emit('start_top', { message: 'Iniciar Streaming TOP.' });
     };
 
+	SocketMsgFSstat = function(msg){
+		if(!msg || !msg.data || !msg.data.fs) return;
+		if (debug) console.log("SocketMsgFSstat - ", JSON.stringify(msg.data.fs));
+		$("#filesystem").bootstrapTable('removeAll').bootstrapTable('append', msg.data.fs);
+	};
+
 	SocketMsgIOstat = function(msg){
 		if(!msg || !msg.data || !msg.data.avgcpu) return;
 		if (debug) console.log("SocketMsgIOstat - ", JSON.stringify(msg.data.avgcpu.iowait));
@@ -175,6 +181,7 @@ var Dashboard = (function() {
 	SocketInit = function(config) {
 		socket = io.connect();
 		//socket.removeAllListeners();
+		socket.on("msgfsstat",	SocketMsgFSstat);
 		socket.on("msgiostat",	SocketMsgIOstat);
 		socket.on("msgtop",		SocketMsgTop);
 		socket.on("msgostype",	SocketMsgOSType);
@@ -194,6 +201,14 @@ var Dashboard = (function() {
             SocketpreInit(function(){
                 if(Notification.permission !== 'granted'){ Notification.requestPermission(); }
             });
+        },
+        StopFSstat: function() {
+			socket.emit('stop_fsstat', { message: 'Detener Streaming FSSTAT.' });
+			$(".panel-body-fs").css("display","none");
+        },
+        StartFSstat: function() {
+			socket.emit('start_fsstat', { message: 'Iniciar Streaming FSSTAT.' });
+			$(".panel-body-fs").css("display","");
         },
         StopIOstat: function() {
 			socket.emit('stop_iostat', { message: 'Detener Streaming IOSTAT.' });

@@ -2,6 +2,7 @@ module.exports = function (io) {
   var debug        = require('debug')('dashboard:server');
   var topparser    = require("../topparser");
   var iostatparser = require("../iostatparser");
+  var fsparser     = require("../fsparser");
   var spawn        = require('child_process').spawn;
   var startTime    = 0;
   var pid_limit    = 10;
@@ -10,9 +11,11 @@ module.exports = function (io) {
   var interval_ios = 5;
   var top_data     = "";
   var iostat_data  = "";
+  var fsstat_data  = "";
   var proc         = null;
   var iostat       = null;
-  var process      = {"status":{"top":{"enabled":null},"iostat":{"enabled":null}}};
+  var fsstat       = null;
+  var process      = {"status":{"top":{"enabled":null},"iostat":{"enabled":null},"fsstat":{"enabled":null}}};
 
  // io.sockets.on('connection', function(socket) {
  io.on('connection', function (socket) {
@@ -29,7 +32,50 @@ module.exports = function (io) {
         interval_top = data.interval_top;
         interval_ios = data.interval_ios;
       });
+//--------------------------------
+      // FileSystem Stat
+      socket.on('start_fsstat', function (data) {
+        if(fsstat && fsstat.pid){
+          debug("Streaming FSSTAT actuamente activo PID: "+fsstat.pid);
+          io.sockets.emit('status', { message: "Streaming FSSTAT actuamente activo PID: "+fsstat.pid} );
+          debug("START FSSTAT: Emite en broadcast un Refresh FSSTAT: true.");
+          io.sockets.emit('refresh', process.status );
+          return;
+        }
 
+        startTime =  new Date().getTime();
+        fsstat    = spawn('/var/adm/ssoo/dashboard/bin/fsstat.sh', ['10']);
+        debug("Cliente sincronizado, arrancando Streaming de FSSTAT PID: "+fsstat.pid);
+        socket.emit('status', { message: "Arrancando Streaming FSSTAT PID: "+fsstat.pid});
+        debug("START FSSTAT: Emite en broadcast un Refresh FSSTAT: true.");
+        process.status.fsstat.enabled = true;
+        io.sockets.emit('refresh', process.status );
+
+        fsstat.stdout.on('data', function (data) {
+          fsstat_data=data.toString();
+          processDataFSStat(fsstat_data);
+        });
+
+        fsstat.on('close', function (code) { 
+          fsstat = null; 
+          debug('Deteniendo el streaming de FSSTAT. Codigo de salida: ' + code); 
+          debug("STOP FSSTAT: Emite en broadcast un Refresh FSSTAT: false");
+          process.status.fsstat.enabled = false;
+          io.sockets.emit('refresh', process.status );
+        });
+
+        var processDataFSStat = function (_data){
+          debug("Procesando datos de FSSTAT PID: "+fsstat.pid);
+          var result=fsparser.parse(_data);
+          if(callback){callback(null,result)}
+          debug("Emite Broadcast de FSSTAT a los clientes.");
+          io.sockets.emit('msgfsstat', result);
+          iostat_data="";
+        }
+
+        socket.emit('status', { message: "Streaming IOSTAT activado PID: "+fsstat.pid});
+      });  // End Start FILESYSTEM
+//--------------------------------
       // Start IOSTAT
       socket.on('start_iostat', function (data) {
         if(iostat && iostat.pid){
@@ -72,7 +118,7 @@ module.exports = function (io) {
 
         socket.emit('status', { message: "Streaming IOSTAT activado PID: "+iostat.pid});
       });  // End Start IOSTAT
-
+//--------------------------------
       // Start TOP
       socket.on('start_top', function (data) {
         if(proc && proc.pid){

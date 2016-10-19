@@ -193,6 +193,28 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
+					<div class="panel-heading">FileSystem - <input type="checkbox" name="fs-checkbox" checked></div>
+					<div class="panel-body panel-body-fs" style="display: none;">
+						<table id="filesystem" data-toggle="table">
+						    <thead>
+						    <tr>
+						        <th data-field="fsuse" data-align="right" >%Uso</th>
+						        <th data-field="fsmounted" >Montado en</th>
+						        <th data-field="fssize" >Tamaño</th>
+						        <th data-field="fsused" >Utilizado</th>
+						        <th data-field="fsavail" >Disponible</th>
+						        <th data-field="fsfilesystem" >Filesystem</th>
+						    </tr>
+						    </thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->	
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
 					<div class="panel-heading">IOStats - <input type="checkbox" name="iostat-checkbox" checked></div>
 					<div class="panel-body panel-body-iostat" style="display: none;">
 						<table id="iostat" data-toggle="table">
@@ -236,6 +258,11 @@
 	$(function() {
 		Dashboard.init({interval:5, iostat:1});
 		Dashboard.SetInterval(1);
+		$("input[name='fs-checkbox']").bootstrapSwitch('state', false, true);
+		$('input[name="fs-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+  			if(state === false)	{ Dashboard.StopFSstat();  }
+  			else 				{ Dashboard.StartFSstat(); }
+		});
 		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true);
 		$('input[name="iostat-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
   			if(state === false)	{ Dashboard.StopIOstat();  }

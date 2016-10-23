@@ -1,4 +1,4 @@
-Dashboard Linux
+Dashboard Linux v1.02
 ===
 
 Dashboard minimalista y no intrusiva para servers linux. Monitoriza en tiempo real Procesos CPU, Memoria y SWAPE utilizando NodeJS y Socke.IO

@@ -81,6 +81,9 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
 **IOSTAT Output**
 <img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-iostat.png" />
 
+**FSSTAST Output**
+<img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard-fsstat.png" />
+
 **Alerts**
 <img src="https://raw.githubusercontent.com/mobarrio/dashboard/master/public/images/Dashboard02.png" />
 <div style="text-align: center;">

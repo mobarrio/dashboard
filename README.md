@@ -32,11 +32,15 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
 
  $ git clone https://github.com/mobarrio/dashboard.git
 
+ $ chmod 755 /var/adm/ssoo/dashboard/bin/fsstat.sh 
+ 
+ $ chmod 755 /var/adm/ssoo/dashboard/etc/dashgs.sh
+
  $ cd dashboard && npm install
 ```
 
 
-**Preparamos scripts de arranque automatico:**
+**Preparamos scripts de arranque automatico POSIX:**
 ```
  $ npm -g install forever
    
@@ -45,6 +49,48 @@ Dashboard minimalist and non-intrusive for Linux Servers. Monitoring in real-tim
  $ chmod 755 /etc/init.d/dashgs
    
  $ chkconfig --add dashgs
+```
+
+**Preparamos scripts de arranque automatico SYSTEMCTL:**
+```
+ $ npm -g install forever
+
+ 1. Creamos el usuario que arrancara el servicio (sin loguin)
+ # adduser dashboard -s /sbin/nologin
+
+ 2. Creamos el archivo que administrara el servicio
+ # vi /etc/systemd/system/dashboard.service
+
+ [Unit]
+ Description=Dashboard GSIS
+ After=network.target local-fs.target remote-fs.target
+ 
+ [Service]
+ Type=forking
+ User=root
+ ExecStart=/var/adm/ssoo/dashboard/etc/dashgs.sh start
+ ExecStop=/var/adm/ssoo/dashboard/etc/dashgs.sh stop
+ Restart=on-abort
+ 
+ [Install]
+ WantedBy=multi-user.target
+
+ 3. Ejecutamos las tareas propias del servicio (Arrancar, Parar, Status, Etc.)
+ Arrancar el servicio de la Dashboard
+ # systemctl start dashboard
+
+ Verificamos el status
+ # systemctl status dashboard
+
+ Paramos el servicio
+ # systemctl stop dashboard
+
+ Habilitamos el serivio en el boot
+ # systemctl enable dashboard
+
+ Deshabilitamos el serivio en el boot
+ # systemctl disable dashboard
+
 ```
 
  
